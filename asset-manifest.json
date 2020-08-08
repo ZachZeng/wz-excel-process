@@ -1,0 +1,26 @@
+{
+  "files": {
+    "main.css": "/wz-excel-process/static/css/main.5ecd60fb.chunk.css",
+    "main.js": "/wz-excel-process/static/js/main.df7a2530.chunk.js",
+    "main.js.map": "/wz-excel-process/static/js/main.df7a2530.chunk.js.map",
+    "runtime-main.js": "/wz-excel-process/static/js/runtime-main.1326b3db.js",
+    "runtime-main.js.map": "/wz-excel-process/static/js/runtime-main.1326b3db.js.map",
+    "static/css/2.9e0dcc19.chunk.css": "/wz-excel-process/static/css/2.9e0dcc19.chunk.css",
+    "static/js/2.df6f321c.chunk.js": "/wz-excel-process/static/js/2.df6f321c.chunk.js",
+    "static/js/2.df6f321c.chunk.js.map": "/wz-excel-process/static/js/2.df6f321c.chunk.js.map",
+    "index.html": "/wz-excel-process/index.html",
+    "precache-manifest.56215d3fc91f13f56f408073590ecf5b.js": "/wz-excel-process/precache-manifest.56215d3fc91f13f56f408073590ecf5b.js",
+    "service-worker.js": "/wz-excel-process/service-worker.js",
+    "static/css/2.9e0dcc19.chunk.css.map": "/wz-excel-process/static/css/2.9e0dcc19.chunk.css.map",
+    "static/css/main.5ecd60fb.chunk.css.map": "/wz-excel-process/static/css/main.5ecd60fb.chunk.css.map",
+    "static/js/2.df6f321c.chunk.js.LICENSE.txt": "/wz-excel-process/static/js/2.df6f321c.chunk.js.LICENSE.txt",
+    "static/media/excel.c59164de.svg": "/wz-excel-process/static/media/excel.c59164de.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.1326b3db.js",
+    "static/css/2.9e0dcc19.chunk.css",
+    "static/js/2.df6f321c.chunk.js",
+    "static/css/main.5ecd60fb.chunk.css",
+    "static/js/main.df7a2530.chunk.js"
+  ]
+}
