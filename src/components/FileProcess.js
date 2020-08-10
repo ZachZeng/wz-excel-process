@@ -1,6 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { ReactComponent as ExcelSvg } from "../images/excel.svg";
-import { DateRange } from "react-date-range";
+import DatePicker, { registerLocale, setDefaultLocale } from "react-datepicker";
+import zhCN from "date-fns/locale/zh-CN";
+import "react-datepicker/dist/react-datepicker.css";
+import "./monthpicker.css";
 import {
   FilterWrapper,
   FilterTextWrapper,
@@ -8,7 +11,8 @@ import {
   CalcButton,
   ExportButton,
   FilterDateWrapper,
-  ErrorMessage
+  ErrorMessage,
+  FilterMonthSelector
 } from "../elements/StyledElements";
 import Select from "react-select";
 import {
@@ -19,90 +23,92 @@ import * as FileSaver from "file-saver";
 import * as XLSX from "xlsx";
 import "react-date-range/dist/styles.css"; // main css file
 import "react-date-range/dist/theme/default.css"; // theme css file
+import { Results } from "./Results";
 
 export const FileProcess = ({ filename, data }) => {
   const [clients, setClients] = useState();
-  const [brands, setBrands] = useState();
+  const [sales, setSales] = useState();
   const [minDate, setMinDate] = useState(new Date());
   const [maxDate, setMaxDate] = useState(new Date());
-  const [currentClient, setCurrentClient] = useState();
-  const [currentBrand, setCurrentBrand] = useState();
+  const [resultClient, setResultClient] = useState({ value: "", label: "" });
+  const [resultSale, setResultSale] = useState({ value: "", label: "" });
+  const [currentClient, setCurrentClient] = useState({ value: "", label: "" });
+  const [currentSale, setCurrentSale] = useState({ value: "", label: "" });
   const [errorMessage, setErrorMessage] = useState("");
-  const [filteredData, setFilteredData] = useState("");
-  const [dateRange, setDateRange] = useState([
-    {
-      startDate: new Date(),
-      endDate: null,
-      key: "selection"
-    }
-  ]);
+  const [filteredData, setFilteredData] = useState();
+  const [month, setMonth] = useState(new Date());
+  registerLocale("zhCN", zhCN);
+
   const [totalNum, setTotalNum] = useState(0);
   const [totalAmount, setTotalAmount] = useState(0);
   //   console.log(data);
+
+  const CustomInput = ({ value, onClick }) => (
+    <FilterMonthSelector onClick={onClick}>{value}</FilterMonthSelector>
+  );
+
+  const handleMonthChange = newValue => {
+    setMonth(newValue);
+  };
 
   const handleClientChange = currentClient => {
     setCurrentClient(currentClient);
   };
 
-  const handleBrandChange = currentBrand => {
-    setCurrentBrand(currentBrand);
+  const handlesaleChange = currentSale => {
+    setCurrentSale(currentSale);
   };
 
   useEffect(() => {
     if (typeof data !== "undefined") {
       let clientlist = [];
-      let brandlist = [];
+      let salelist = [];
       let datelist = [];
       data.map(item => {
         if (!clientlist.some(e => e.value === item["客户名"])) {
           clientlist.push({ value: item["客户名"], label: item["客户名"] });
         }
-        if (!brandlist.some(e => e.value === item["品牌"])) {
-          brandlist.push({ value: item["品牌"], label: item["品牌"] });
+        if (!salelist.some(e => e.value === item["业务员"])) {
+          salelist.push({ value: item["业务员"], label: item["业务员"] });
         }
         if (!datelist.includes(item["日期"])) {
           datelist.push(new Date(item["日期"]));
         }
       });
-      brandlist.unshift({
-        value: "全选",
-        label: "全选"
-      });
       clientlist.unshift({
         value: "全选",
         label: "全选"
       });
-      setBrands(brandlist);
+      salelist.unshift({
+        value: "全选",
+        label: "全选"
+      });
+      setSales(salelist);
       setClients(clientlist);
       setMinDate(new Date(Math.min.apply(null, datelist)));
       setMaxDate(new Date(Math.max.apply(null, datelist)));
-      console.log(brandlist);
+      setMonth(minDate);
+      // console.log(salelist);
     }
   }, [data]);
 
   const calcFunc = () => {
-    console.log(currentBrand);
-    console.log(currentClient);
-    console.log(dateRange);
+    // console.log(currentSale);
+    // console.log(currentClient);
+    // console.log(month);
 
     if (
-      currentBrand === undefined ||
+      currentSale === undefined ||
+      currentSale["value"] === "" ||
       currentClient === undefined ||
-      dateRange[0]["startDate"] === null ||
-      dateRange[0]["endDate"] === null
+      currentClient["value"] === ""
     ) {
       let msg = "";
-      if (currentBrand === undefined) {
-        msg += "请选择品牌; ";
+      if (currentSale === undefined || currentSale["value"] === "") {
+        msg += "请选择业务员; ";
       }
-      if (currentClient === undefined) {
+      if (currentClient === undefined || currentClient["value"] === "") {
         msg += "请选择客户; ";
-      }
-      if (dateRange[0]["startDate"] === null) {
-        msg += "请设定开始时间; ";
-      }
-      if (dateRange[0]["endDate"] === null) {
-        msg += "请设定结束时间; ";
       }
       setErrorMessage(msg);
       return;
@@ -113,40 +119,34 @@ export const FileProcess = ({ filename, data }) => {
     let filteredDate = data.filter(item => {
       let itemdate = new Date(item["日期"]);
       if (
-        currentBrand["value"] === "全选" &&
+        currentSale["value"] === "全选" &&
         currentClient["value"] === "全选"
       ) {
-        return true;
+        if (item["日期"] <= month) return true;
       } else if (
-        currentBrand["value"] === "全选" &&
+        currentSale["value"] === "全选" &&
         currentClient["value"] !== "全选"
       ) {
         if (
           item["客户名"] === currentClient["value"] &&
-          itemdate >= dateRange[0]["startDate"] &&
-          itemdate <= dateRange[0]["endDate"]
+          item["日期"] <= month
         ) {
           return true;
         }
         return false;
       } else if (
-        currentBrand["value"] !== "全选" &&
+        currentSale["value"] !== "全选" &&
         currentClient["value"] === "全选"
       ) {
-        if (
-          item["品牌"] === currentBrand["value"] &&
-          itemdate >= dateRange[0]["startDate"] &&
-          itemdate <= dateRange[0]["endDate"]
-        ) {
+        if (item["业务员"] === currentSale["value"] && item["日期"] <= month) {
           return true;
         }
         return false;
       } else {
         if (
-          item["品牌"] === currentBrand["value"] &&
+          item["业务员"] === currentSale["value"] &&
           item["客户名"] === currentClient["value"] &&
-          itemdate >= dateRange[0]["startDate"] &&
-          itemdate <= dateRange[0]["endDate"]
+          item["日期"] <= month
         ) {
           return true;
         }
@@ -155,22 +155,24 @@ export const FileProcess = ({ filename, data }) => {
     });
 
     let num = 0;
-    let amount = 0;
+    let amount = 0.0;
     setFilteredData(filteredDate);
     if (filteredDate.length > 0) {
       filteredDate.map(item => {
         if (typeof item["数量"] === "number") {
           num += item["数量"];
         }
-        amount += item["金额"];
+        amount += Number.parseFloat(item["金额"]);
       });
     }
-    filteredDate.push({ 客户名: "累计", 数量: num, 金额: amount });
+
+    setResultClient(currentClient);
+    setResultSale(currentSale);
 
     setTotalNum(num);
-    setTotalAmount(amount);
+    setTotalAmount(amount.toFixed(2));
 
-    console.log(filteredDate);
+    // console.log(filteredDate);
   };
 
   const exportToExcel = () => {
@@ -187,12 +189,8 @@ export const FileProcess = ({ filename, data }) => {
     const data = new Blob([excelBuffer], { type: fileType });
     const filename = "客户".concat(
       currentClient["value"],
-      "_品牌",
-      currentBrand["value"],
-      "_时间",
-      dateRange[0]["startDate"].toLocaleDateString("zh-CN"),
-      "-",
-      dateRange[0]["endDate"].toLocaleDateString("zh-CN")
+      "_业务员",
+      currentSale["value"]
     );
     FileSaver.saveAs(data, filename + fileExtension);
   };
@@ -207,11 +205,11 @@ export const FileProcess = ({ filename, data }) => {
         <FilterTextWrapper>
           <div>
             <div style={{ marginBottom: "3rem" }}>
-              <h2>品牌</h2>
+              <h2>业务员</h2>
               <Select
-                options={brands}
-                value={currentBrand}
-                onChange={handleBrandChange}
+                options={sales}
+                value={currentSale}
+                onChange={handlesaleChange}
               />
             </div>
             <div>
@@ -232,27 +230,25 @@ export const FileProcess = ({ filename, data }) => {
           </div>
         </FilterTextWrapper>
         <FilterDateWrapper>
-          <h2>时间区间</h2>
-          <DateRange
-            editableDateInputs={true}
-            onChange={item => setDateRange([item.selection])}
-            moveRangeOnFirstSelection={false}
-            ranges={dateRange}
-            minDate={minDate}
+          <h2>选择截止月份</h2>
+          <DatePicker
+            selected={month}
+            onChange={date => handleMonthChange(date)}
+            dateFormat="MM/yyyy"
+            showMonthYearPicker
             maxDate={maxDate}
-            rangeColors={["#61988e"]}
+            minDate={minDate}
+            locale="zhCN"
+            customInput={<CustomInput />}
           />
         </FilterDateWrapper>
       </FilterWrapper>
       <ResultWrapper>
-        <div>
-          <h2>累计数量</h2>
-          <p>{totalNum !== 0 ? totalNum : "无数据"}</p>
-        </div>
-        <div>
-          <h2>累计金额</h2>
-          <p>{totalAmount !== 0 ? totalAmount : "无数据"}</p>
-        </div>
+        <Results
+          filteredData={filteredData}
+          client={resultClient["value"]}
+          sale={resultSale["value"]}
+        />
         <ExportButton onClick={exportToExcel}> 导出excel文件</ExportButton>
       </ResultWrapper>
     </FileProcessWrapper>

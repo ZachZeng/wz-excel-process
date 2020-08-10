@@ -1,0 +1,25 @@
+.react-datepicker-popper {
+  font-family: "Noto Sans SC", sans-serif;
+}
+.react-datepicker {
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+}
+.react-datepicker__navigation {
+  top: 0.8rem;
+}
+.react-datepicker-year-header {
+  padding: 0.7rem 1rem;
+  border: none;
+}
+
+.react-datepicker__month--selected {
+  background: #61988e;
+}
+
+.react-datepicker__month--selected:hover {
+  background: #2f5f56;
+}
+
+.react-datepicker__month-text {
+  padding: 0.5rem;
+}

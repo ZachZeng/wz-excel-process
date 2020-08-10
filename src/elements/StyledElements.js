@@ -67,7 +67,7 @@ export const FilterWrapper = styled.div`
   display: flex;
   flex-direction: row;
   background: #eef4ee;
-  height: 30rem;
+  height: 23rem;
   justify-content: start;
   color: #575757;
   padding: 2rem 3rem;
@@ -88,6 +88,22 @@ export const FilterTextWrapper = styled.div`
 
 export const FilterDateWrapper = styled.div`
   width: 25rem;
+`;
+
+export const FilterMonthSelector = styled.button`
+  font-family: "Noto Sans SC", sans-serif;
+  padding: 0.5rem 1.5rem;
+  font-size: 1rem;
+  border: none;
+  background: #61988e;
+  color: white;
+  cursor: pointer;
+  transition: all 0.5s;
+  &:active,
+  :focus,
+  :hover {
+    background: #2f5f56;
+  }
 `;
 
 export const ResultWrapper = styled.div`
@@ -141,4 +157,43 @@ export const ErrorMessage = styled.div`
   padding: 2rem 0rem;
   font-weight: bolder;
   color: #ed5757;
+`;
+
+export const ResultsHeader = styled.div`
+  display: flex;
+  flex-direction: column;
+  h2 {
+    font-size: 1.75rem;
+  }
+  h3 {
+    font-weight: normal;
+  }
+
+  span {
+    margin-right: 3rem;
+  }
+`;
+
+export const ResultsTable = styled.table`
+  border-collapse: collapse;
+  width: 100%;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+
+  td,
+  th {
+    border: 2px solid #eef4ee;
+    text-align: left;
+    padding: 1.5rem;
+  }
+
+  th {
+    font-size: 1.5rem;
+  }
+
+  tr {
+    background-color: #fff;
+  }
+  tr:nth-child(even) {
+    background-color: #eef4ee;
+  }
 `;
