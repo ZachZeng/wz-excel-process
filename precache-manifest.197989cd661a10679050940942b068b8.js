@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "978a126405a3f3d5a4eb584be2e198b7",
+    "revision": "12dcf6e80134c75545b47bbfe79b6c1c",
     "url": "/wz-excel-process/index.html"
   },
   {
