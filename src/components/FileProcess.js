@@ -89,8 +89,7 @@ export const FileProcess = ({ filename, data }) => {
       setClients(clientlist);
       setMinDate(new Date(Math.min.apply(null, datelist)));
       setMaxDate(new Date(Math.max.apply(null, datelist)));
-      setMonth(minDate);
-      // console.log(salelist);
+      setMonth(Math.min.apply(null, datelist));
     }
   }, [data]);
 
