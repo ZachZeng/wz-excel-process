@@ -7,6 +7,7 @@ import {
 
 export const Results = ({ filteredData, client, sale, month }) => {
   const [cleanData, setCleanData] = useState([]);
+  const [total, setTotal] = useState();
   //   console.log(filteredData);
 
   useEffect(() => {
@@ -40,6 +41,7 @@ export const Results = ({ filteredData, client, sale, month }) => {
       //   console.log(brandlist);
       const total = filteredData.find(item => item["客户名"] === "累计");
       //   console.log(total);
+      setTotal(total);
 
       brandlist.sort((a, b) => {
         if (a["品牌"].localeCompare(b["品牌"], "zh") == 1) {
@@ -49,11 +51,6 @@ export const Results = ({ filteredData, client, sale, month }) => {
         }
 
         return a["品种"].localeCompare(b["品种"], "zh");
-      });
-      brandlist.push({
-        品牌: "累计",
-        数量: total["数量"],
-        金额: total["金额"]
       });
       setCleanData(brandlist);
     }
@@ -65,7 +62,8 @@ export const Results = ({ filteredData, client, sale, month }) => {
         if (
           client === undefined ||
           sale === undefined ||
-          filteredData === undefined
+          filteredData === undefined ||
+          total === undefined
         ) {
           return;
         }
@@ -82,6 +80,8 @@ export const Results = ({ filteredData, client, sale, month }) => {
                 <span>
                   截止至: {month.getFullYear()}年{month.getMonth() + 1}月
                 </span>
+                <span>累计数量：{total["数量"]}</span>
+                <span>累计金额：{total["金额"].toFixed(2)}</span>
               </h3>
             </ResultsHeader>
             <ResultsTable>
