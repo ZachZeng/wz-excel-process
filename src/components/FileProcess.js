@@ -33,8 +33,14 @@ export const FileProcess = ({ filename, data }) => {
   const [resultClient, setResultClient] = useState({ value: "", label: "" });
   const [resultSale, setResultSale] = useState({ value: "", label: "" });
   const [resultMonth, setResultMonth] = useState();
-  const [currentClient, setCurrentClient] = useState({ value: "", label: "" });
-  const [currentSale, setCurrentSale] = useState({ value: "", label: "" });
+  const [currentClient, setCurrentClient] = useState({
+    value: "全选",
+    label: "全选"
+  });
+  const [currentSale, setCurrentSale] = useState({
+    value: "全选",
+    label: "全选"
+  });
   const [errorMessage, setErrorMessage] = useState("");
   const [filteredData, setFilteredData] = useState();
   const [printData, setPrintData] = useState();
@@ -89,7 +95,7 @@ export const FileProcess = ({ filename, data }) => {
       setClients(clientlist);
       setMinDate(new Date(Math.min.apply(null, datelist)));
       setMaxDate(new Date(Math.max.apply(null, datelist)));
-      setMonth(Math.min.apply(null, datelist));
+      setMonth(new Date(Math.min.apply(null, datelist)));
     }
   }, [data]);
 
