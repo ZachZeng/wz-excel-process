@@ -181,7 +181,7 @@ export const FileProcess = ({ filename, data }) => {
       pdata.map(item => {
         if (item["客户名"] === "累计") return;
         let print_year = item["日期"].getFullYear();
-        let print_month = item["日期"].getMonth();
+        let print_month = item["日期"].getMonth() + 1;
         item["日期"] = print_year + "年" + print_month + "月";
       });
     }
