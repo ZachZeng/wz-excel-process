@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { ResultsHeader, ResultsTable } from "../elements/StyledElements";
+import {
+  ResultsHeader,
+  ResultsTable,
+  FilterMonthSelector
+} from "../elements/StyledElements";
 
-export const Results = ({ filteredData, client, sale }) => {
+export const Results = ({ filteredData, client, sale, month }) => {
   const [cleanData, setCleanData] = useState([]);
-  console.log(filteredData);
+  //   console.log(filteredData);
 
   useEffect(() => {
     if (typeof filteredData !== "undefined") {
@@ -12,7 +16,8 @@ export const Results = ({ filteredData, client, sale }) => {
         if (
           !brandlist.some(
             e => e["品种"] === item["品种"] && e["单价"] === item["单价"]
-          )
+          ) &&
+          item["客户名"] !== "累计"
         ) {
           let temp = {
             品牌: item["品牌"],
@@ -22,7 +27,7 @@ export const Results = ({ filteredData, client, sale }) => {
             金额: item["金额"]
           };
           brandlist.push(temp);
-        } else {
+        } else if (item["客户名"] !== "累计") {
           let i = brandlist.findIndex(
             e => e["品种"] === item["品种"] && e["单价"] === item["单价"]
           );
@@ -32,7 +37,10 @@ export const Results = ({ filteredData, client, sale }) => {
           brandlist[i] = temp;
         }
       });
-      console.log(brandlist);
+      //   console.log(brandlist);
+      const total = filteredData.find(item => item["客户名"] === "累计");
+      //   console.log(total);
+
       brandlist.sort((a, b) => {
         if (a["品牌"].localeCompare(b["品牌"], "zh") == 1) {
           return 1;
@@ -41,6 +49,11 @@ export const Results = ({ filteredData, client, sale }) => {
         }
 
         return a["品种"].localeCompare(b["品种"], "zh");
+      });
+      brandlist.push({
+        品牌: "累计",
+        数量: total["数量"],
+        金额: total["金额"]
       });
       setCleanData(brandlist);
     }
@@ -66,6 +79,9 @@ export const Results = ({ filteredData, client, sale }) => {
               <h3>
                 <span>业务员：{sale}</span>
                 <span>客户：{client}</span>
+                <span>
+                  截止至: {month.getFullYear()}年{month.getMonth() + 1}月
+                </span>
               </h3>
             </ResultsHeader>
             <ResultsTable>
@@ -76,15 +92,18 @@ export const Results = ({ filteredData, client, sale }) => {
                 <th>数量</th>
                 <th>金额</th>
               </tr>
-              {cleanData.map(item => (
-                <tr>
-                  <td>{item["品牌"]}</td>
-                  <td>{item["品种"]}</td>
-                  <td>{item["单价"]}</td>
-                  <td>{item["数量"]}</td>
-                  <td>{item["金额"].toFixed(2)}</td>
-                </tr>
-              ))}
+              {cleanData.map(item => {
+                if (item["数量"] !== 0)
+                  return (
+                    <tr>
+                      <td>{item["品牌"]}</td>
+                      <td>{item["品种"]}</td>
+                      <td>{item["单价"]}</td>
+                      <td>{item["数量"]}</td>
+                      <td>{item["金额"].toFixed(2)}</td>
+                    </tr>
+                  );
+              })}
             </ResultsTable>
           </>
         );

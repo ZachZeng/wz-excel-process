@@ -32,10 +32,12 @@ export const FileProcess = ({ filename, data }) => {
   const [maxDate, setMaxDate] = useState(new Date());
   const [resultClient, setResultClient] = useState({ value: "", label: "" });
   const [resultSale, setResultSale] = useState({ value: "", label: "" });
+  const [resultMonth, setResultMonth] = useState();
   const [currentClient, setCurrentClient] = useState({ value: "", label: "" });
   const [currentSale, setCurrentSale] = useState({ value: "", label: "" });
   const [errorMessage, setErrorMessage] = useState("");
   const [filteredData, setFilteredData] = useState();
+  const [printData, setPrintData] = useState();
   const [month, setMonth] = useState(new Date());
   registerLocale("zhCN", zhCN);
 
@@ -93,9 +95,10 @@ export const FileProcess = ({ filename, data }) => {
   }, [data]);
 
   const calcFunc = () => {
-    // console.log(currentSale);
-    // console.log(currentClient);
-    // console.log(month);
+    console.log(data);
+    console.log(currentSale);
+    console.log(currentClient);
+    console.log(month);
 
     if (
       currentSale === undefined ||
@@ -115,75 +118,93 @@ export const FileProcess = ({ filename, data }) => {
     }
 
     setErrorMessage("");
+    let newMonth = new Date(month.getFullYear(), month.getMonth(), 1);
+    newMonth.setMonth(newMonth.getMonth() + 1);
+    console.log(newMonth);
 
     let filteredDate = data.filter(item => {
-      let itemdate = new Date(item["日期"]);
-      if (
-        currentSale["value"] === "全选" &&
-        currentClient["value"] === "全选"
-      ) {
-        if (item["日期"] <= month) return true;
-      } else if (
-        currentSale["value"] === "全选" &&
-        currentClient["value"] !== "全选"
-      ) {
+      if (item["日期"] < newMonth) {
         if (
-          item["客户名"] === currentClient["value"] &&
-          item["日期"] <= month
+          currentSale["value"] === "全选" &&
+          currentClient["value"] === "全选"
         ) {
           return true;
+        } else if (
+          currentSale["value"] === "全选" &&
+          currentClient["value"] !== "全选"
+        ) {
+          if (item["客户名"] === currentClient["value"]) {
+            return true;
+          }
+          return false;
+        } else if (
+          currentSale["value"] !== "全选" &&
+          currentClient["value"] === "全选"
+        ) {
+          if (item["业务员"] === currentSale["value"]) {
+            return true;
+          }
+          return false;
+        } else {
+          if (
+            item["业务员"] === currentSale["value"] &&
+            item["客户名"] === currentClient["value"]
+          ) {
+            return true;
+          }
+          return false;
         }
-        return false;
-      } else if (
-        currentSale["value"] !== "全选" &&
-        currentClient["value"] === "全选"
-      ) {
-        if (item["业务员"] === currentSale["value"] && item["日期"] <= month) {
-          return true;
-        }
-        return false;
       } else {
-        if (
-          item["业务员"] === currentSale["value"] &&
-          item["客户名"] === currentClient["value"] &&
-          item["日期"] <= month
-        ) {
-          return true;
-        }
+        console.log(item["日期"] + "not in time");
         return false;
       }
     });
 
     let num = 0;
     let amount = 0.0;
-    setFilteredData(filteredDate);
+    let pdata = [];
+
     if (filteredDate.length > 0) {
       filteredDate.map(item => {
         if (typeof item["数量"] === "number") {
           num += item["数量"];
         }
         amount += Number.parseFloat(item["金额"]);
+        let i = { ...item };
+        pdata.push(i);
       });
     }
 
+    filteredDate.push({ 客户名: "累计", 数量: num, 金额: amount });
+    pdata.push({ 客户名: "累计", 数量: num, 金额: amount });
+
+    if (pdata.length > 0) {
+      pdata.map(item => {
+        if (item["客户名"] === "累计") return;
+        let print_year = item["日期"].getFullYear();
+        let print_month = item["日期"].getMonth();
+        item["日期"] = print_year + "年" + print_month + "月";
+      });
+    }
+    setPrintData(pdata);
+    setFilteredData(filteredDate);
+
     setResultClient(currentClient);
     setResultSale(currentSale);
-
-    setTotalNum(num);
-    setTotalAmount(amount.toFixed(2));
+    setResultMonth(month);
 
     // console.log(filteredDate);
   };
 
   const exportToExcel = () => {
-    if (filteredData === "") {
+    if (printData === "") {
       alert("无数据");
       return;
     }
     const fileType =
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
     const fileExtension = ".xlsx";
-    const ws = XLSX.utils.json_to_sheet(filteredData);
+    const ws = XLSX.utils.json_to_sheet(printData);
     const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
     const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
     const data = new Blob([excelBuffer], { type: fileType });
@@ -248,6 +269,7 @@ export const FileProcess = ({ filename, data }) => {
           filteredData={filteredData}
           client={resultClient["value"]}
           sale={resultSale["value"]}
+          month={resultMonth}
         />
         <ExportButton onClick={exportToExcel}> 导出excel文件</ExportButton>
       </ResultWrapper>
