@@ -7,6 +7,12 @@ export const LayoutWrapper = styled.div`
   font-family: "Noto Sans SC", sans-serif;
 `;
 
+export const DZDropzoneWrapper = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+`;
+
 export const DropzoneWrapper = styled.div`
   input {
     width: 100%;

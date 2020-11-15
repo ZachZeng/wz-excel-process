@@ -1,11 +1,12 @@
 import React from "react";
-import { Header, Layout, MyDropzone } from "./components";
+import { Header, Layout, PDDropzone, DZProcess } from "./components";
 
 function App() {
   return (
     <Layout>
       <Header />
-      <MyDropzone />
+      <PDDropzone />
+      <DZProcess />
     </Layout>
   );
 }

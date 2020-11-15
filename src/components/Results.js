@@ -44,9 +44,9 @@ export const Results = ({ filteredData, client, sale, month }) => {
       setTotal(total);
 
       brandlist.sort((a, b) => {
-        if (a["品牌"].localeCompare(b["品牌"], "zh") == 1) {
+        if (a["品牌"].localeCompare(b["品牌"], "zh") === 1) {
           return 1;
-        } else if (a["品牌"].localeCompare(b["品牌"], "zh") == -1) {
+        } else if (a["品牌"].localeCompare(b["品牌"], "zh") === -1) {
           return -1;
         }
 

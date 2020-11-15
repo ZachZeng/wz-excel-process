@@ -100,10 +100,10 @@ export const FileProcess = ({ filename, data }) => {
   }, [data]);
 
   const calcFunc = () => {
-    console.log(data);
-    console.log(currentSale);
-    console.log(currentClient);
-    console.log(month);
+    // console.log(data);
+    // console.log(currentSale);
+    // console.log(currentClient);
+    // console.log(month);
 
     if (
       currentSale === undefined ||

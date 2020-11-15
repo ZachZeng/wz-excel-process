@@ -1,10 +1,10 @@
 import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import { FileProcess } from "../components";
+import { FileProcess } from ".";
 import { DropzoneWrapper } from "../elements/StyledElements";
 import * as XLSX from "xlsx";
 
-export const MyDropzone = () => {
+export const ReplaceDropzone = props => {
   const [data, setData] = useState();
 
   const onDrop = useCallback(acceptedFiles => {
@@ -37,6 +37,7 @@ export const MyDropzone = () => {
       });
       /* Update state */
       setData(data);
+      props.onDropFile(data);
     };
     reader.readAsBinaryString(f);
   }, []);
@@ -51,19 +52,17 @@ export const MyDropzone = () => {
     rejectedFiles
   } = useDropzone({
     onDrop,
-    accept: ".xlsx"
+    accept: ".xlsx, .xls"
   });
 
   return (
     <>
+      <h3>产品代替</h3>
       <DropzoneWrapper {...getRootProps()}>
         <input {...getInputProps()} />
         {!isDragActive && "点击这里或者拖拽文件至这里进行上传"}
         {isDragActive && "放下文件"}
       </DropzoneWrapper>
-      {acceptedFiles.length > 0 && (
-        <FileProcess filename={acceptedFiles[0].name} data={data} />
-      )}
     </>
   );
 };
