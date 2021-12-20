@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { DZDropzone, ReplaceDropzone } from "./index";
+import { DZDropzone, ReplaceDropzone } from "../index";
 import { DZFileProcess } from "./DZFileProcess";
 
 export const DZProcess = () => {

@@ -1,12 +1,13 @@
 import React from "react";
-import { Header, Layout, PDDropzone, DZProcess } from "./components";
+import NaviRouter from './router.js';
+
+import { Header, Layout } from "./components";
 
 function App() {
   return (
     <Layout>
       <Header />
-      <PDDropzone />
-      <DZProcess />
+      <NaviRouter />
     </Layout>
   );
 }

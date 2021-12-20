@@ -1,7 +1,6 @@
 import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import { FileProcess } from ".";
-import { DropzoneWrapper } from "../elements/StyledElements";
+import { DropzoneWrapper } from "../../elements/StyledElements";
 import * as XLSX from "xlsx";
 
 export const ReplaceDropzone = props => {

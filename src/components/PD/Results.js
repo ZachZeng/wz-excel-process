@@ -3,7 +3,7 @@ import {
   ResultsHeader,
   ResultsTable,
   FilterMonthSelector
-} from "../elements/StyledElements";
+} from "../../elements/StyledElements";
 
 export const Results = ({ filteredData, client, sale, month }) => {
   const [cleanData, setCleanData] = useState([]);

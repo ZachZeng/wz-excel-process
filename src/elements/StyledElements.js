@@ -7,6 +7,17 @@ export const LayoutWrapper = styled.div`
   font-family: "Noto Sans SC", sans-serif;
 `;
 
+export const Tab = styled.div`
+  height: 3rem;
+  width: 5rem;
+  padding: 1rem 2rem;
+  border-width: 2px;
+  border-radius: 2px;
+  background-color: ${(props) => (props.active ? "#61988e" : "#fff")};
+  border-color: "#61988e";
+  color: ${(props) => (props.active ? "#fff" : "#61988e")};
+`;
+
 export const DZDropzoneWrapper = styled.div`
   width: 100%;
   height: 100%;
@@ -25,7 +36,7 @@ export const DropzoneWrapper = styled.div`
   padding: 3rem;
   border-width: 2px;
   border-radius: 2px;
-  border-color: ${props => getColor(props)};
+  border-color: ${(props) => getColor(props)};
   border-style: dashed;
   background-color: #fafafa;
   color: #bdbdbd;
@@ -34,7 +45,7 @@ export const DropzoneWrapper = styled.div`
   transition: border 0.24s ease-in-out;
 `;
 
-const getColor = props => {
+const getColor = (props) => {
   if (props.isDragAccept) {
     return "#00e676";
   }

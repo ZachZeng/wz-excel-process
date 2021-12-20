@@ -1,21 +1,20 @@
 import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import { FileProcess } from ".";
-import { DropzoneWrapper } from "../elements/StyledElements";
+import { FileProcess } from "./FileProcess";
+import { DropzoneWrapper } from "../../elements/StyledElements";
 import * as XLSX from "xlsx";
 
-export const DZDropzone = props => {
-  const [sumData, setSumData] = useState();
-  const [detailData, setDetailData] = useState();
+export const RecycleDropzone = () => {
+  const [data, setData] = useState();
 
-  const onDrop = useCallback(acceptedFiles => {
+  const onDrop = useCallback((acceptedFiles) => {
     var f = acceptedFiles[0];
     if (!f) {
       return;
     }
     var name = f.name;
     const reader = new FileReader();
-    reader.onload = evt => {
+    reader.onload = (evt) => {
       // evt = on_file_select event
       /* Parse data */
       const bstr = evt.target.result;
@@ -27,23 +26,18 @@ export const DZDropzone = props => {
 
       const wb = XLSX.read(bstr, {
         type: "binary",
-        cellDates: true
+        cellDates: true,
       });
-
       /* Get worksheets */
       const wsnames = wb.SheetNames;
 
       /* Convert to json */
-      const sumData = wb.Sheets[wsnames[0]];
-      /* Update state */
-      setSumData(sumData);
-
-      const detailData = XLSX.utils.sheet_to_json(wb.Sheets[wsnames[1]], {
-        dateNF: "mm/dd/yyyy;@"
+      const data = XLSX.utils.sheet_to_json(wb.Sheets[wsnames[0]], {
+        dateNF: "mm/dd/yyyy;@",
       });
-
-      setDetailData(detailData);
-      props.onDropFile(sumData, detailData);
+      /* Update state */
+      setData(data);
+      console.log("data", data);
     };
     reader.readAsBinaryString(f);
   }, []);
@@ -55,20 +49,23 @@ export const DZDropzone = props => {
     isDragReject,
     isDragAccepted,
     acceptedFiles,
-    rejectedFiles
+    rejectedFiles,
   } = useDropzone({
     onDrop,
-    accept: ".xlsx, .xls"
+    accept: ".xlsx",
   });
 
   return (
     <>
-      <h3>对账单</h3>
+      <h1>未回收对账单</h1>
       <DropzoneWrapper {...getRootProps()}>
         <input {...getInputProps()} />
         {!isDragActive && "点击这里或者拖拽文件至这里进行上传"}
         {isDragActive && "放下文件"}
       </DropzoneWrapper>
+      {acceptedFiles.length > 0 && (
+        <FileProcess filename={acceptedFiles[0].name} data={data} />
+      )}
     </>
   );
 };

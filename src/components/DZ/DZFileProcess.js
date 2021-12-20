@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import * as FileSaver from "file-saver";
 import * as XLSX from "xlsx";
-import { ExportButton } from "../elements/StyledElements";
+import { ExportButton } from "../../elements/StyledElements";
 
 export const DZFileProcess = ({ sumData, detailData, replaceData }) => {
   const [dict, setDict] = useState();
