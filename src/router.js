@@ -40,7 +40,7 @@ const NavUnlisted = styled.ul`
 
 export default function NaviRouter() {
   return (
-    <Router>
+    <Router basename="/wz-excel-process">
       <div>
         <NavUnlisted>
           <NavLink to="/">
