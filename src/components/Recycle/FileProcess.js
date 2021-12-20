@@ -50,6 +50,7 @@ export const FileProcess = ({ filename, data }) => {
     label: "全选",
   });
   const [errorMessage, setErrorMessage] = useState("");
+  const [cleanedData, setCleanedData] = useState();
   const [filteredData, setFilteredData] = useState();
   const [printData, setPrintData] = useState();
   const [minDate, setMinDate] = useState(new Date());
@@ -82,18 +83,41 @@ export const FileProcess = ({ filename, data }) => {
       let clientlist = [];
       let salelist = [];
       let datelist = [];
+      let _cleanedData = [];
 
-      data.map((item) => {
-        if (!clientlist.some((e) => e.value === item["客户名称"])) {
-          clientlist.push({ value: item["客户名称"], label: item["客户名称"] });
-        }
+      data.forEach((item) => {
+        let row = {};
         if (!salelist.some((e) => e.value === item["业务员"])) {
           salelist.push({ value: item["业务员"], label: item["业务员"] });
         }
         if (!datelist.includes(item["对账单账期"])) {
           datelist.push(new Date(item["对账单账期"]));
         }
+        if (!clientlist.some((e) => e.value === item["客户名称"])) {
+          clientlist.push({ value: item["客户名称"], label: item["客户名称"] });
+          row = {
+            客户名称: item["客户名称"],
+            业务员: item["业务员"],
+            对账单账期: item["对账单账期"],
+          };
+          _cleanedData.push(row);
+        } else {
+          const existingRowIndex = _cleanedData.findIndex(
+            (row) => row["客户名称"] === item["客户名称"]
+          );
+          if (
+            _cleanedData[existingRowIndex]["对账单账期"] === undefined ||
+            (item["对账单账期"] !== undefined &&
+              _cleanedData[existingRowIndex]["对账单账期"] < item["对账单账期"])
+          ) {
+            _cleanedData[existingRowIndex]["对账单账期"] = item["对账单账期"];
+          }
+        }
       });
+
+      setCleanedData(_cleanedData);
+      console.log("cleanedData", _cleanedData);
+
       clientlist.unshift({
         value: "全选",
         label: "全选",
@@ -102,6 +126,7 @@ export const FileProcess = ({ filename, data }) => {
         value: "全选",
         label: "全选",
       });
+      console.log("mindate", new Date(Math.min.apply(null, datelist)));
       setMinDate(new Date(Math.min.apply(null, datelist)));
       setSales(salelist);
       setClients(clientlist);
@@ -134,17 +159,9 @@ export const FileProcess = ({ filename, data }) => {
     setErrorMessage("");
     let newMonth = new Date(month.getFullYear(), month.getMonth(), 1);
     newMonth.setMonth(newMonth.getMonth() + 1);
-    console.log(newMonth);
 
-    let _filteredData = data.filter((item) => {
-      if (item["回收状态"] !== undefined) {
-        return false;
-      }
-
+    let _filteredData = cleanedData.filter((item) => {
       //必定是一年以上的
-      if (item["对账单账期"] === undefined) {
-        return true;
-      }
 
       let saleClientFilter = false;
 
@@ -174,7 +191,7 @@ export const FileProcess = ({ filename, data }) => {
       } else {
         if (
           item["业务员"] === currentSale["value"] &&
-          item["客户名称  "] === currentClient["value"]
+          item["客户名称"] === currentClient["value"]
         ) {
           saleClientFilter = true;
         } else {
@@ -182,13 +199,24 @@ export const FileProcess = ({ filename, data }) => {
         }
       }
 
-      const monthsToRecylceMonth =
-        (month.getFullYear() - new Date(item["对账单账期"]).getFullYear()) *
-          12 +
-        month.getMonth() -
-        new Date(item["对账单账期"]).getMonth();
-      console.log(monthsToRecylceMonth);
-      if (monthsToRecylceMonth > recycleMonth.value && saleClientFilter) {
+      let monthsToRecylceMonth = 0;
+
+      if (item["对账单账期"] === undefined) {
+        console.log("没有", item);
+        monthsToRecylceMonth = -1;
+      } else {
+        monthsToRecylceMonth =
+          (month.getFullYear() - new Date(item["对账单账期"]).getFullYear()) *
+            12 +
+          month.getMonth() -
+          new Date(item["对账单账期"]).getMonth();
+      }
+
+      if (
+        (monthsToRecylceMonth === -1 ||
+          monthsToRecylceMonth >= recycleMonth.value) &&
+        saleClientFilter
+      ) {
         return true;
       } else {
         return false;
@@ -201,7 +229,7 @@ export const FileProcess = ({ filename, data }) => {
       _filteredData.map((item) => {
         const monthsToRecylceMonth =
           item["对账单账期"] === undefined
-            ? 13
+            ? -1
             : (month.getFullYear() -
                 new Date(item["对账单账期"]).getFullYear()) *
                 12 +
@@ -211,7 +239,7 @@ export const FileProcess = ({ filename, data }) => {
           业务员: item["业务员"],
           客户名称: item["客户名称"],
           未回收期数:
-            monthsToRecylceMonth >= 12
+            monthsToRecylceMonth === -1
               ? `1年以上`
               : `${monthsToRecylceMonth}个月`,
         };
@@ -306,7 +334,7 @@ export const FileProcess = ({ filename, data }) => {
         <Results
           printData={printData}
           client={currentClient["value"]}
-          sale={currentClient["value"]}
+          sale={currentSale["value"]}
           month={month}
           recycleMonth={recycleMonth}
         />
