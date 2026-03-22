@@ -7,7 +7,12 @@ import {
 } from "react-router-dom";
 import styled from "styled-components";
 
-import { PDDropzone, DZProcess, RecycleDropzone } from "./components";
+import {
+  PDDropzone,
+  DZProcess,
+  RecycleDropzone,
+  CXDropzone,
+} from "./components";
 import { Tab } from "./elements/StyledElements";
 
 const NavUnlisted = styled.ul`
@@ -54,12 +59,17 @@ export default function NaviRouter() {
           <NavLink to="/recycle">
             <li>未回收账单</li>
           </NavLink>
+
+          <NavLink to="/cx">
+            <li>促销余额核对</li>
+          </NavLink>
         </NavUnlisted>
 
         <Routes>
           <Route exact path="/" element={<PDDropzone />} />
           <Route path="/dz" element={<DZProcess />} />
           <Route path="/recycle" element={<RecycleDropzone />} />
+          <Route path="/cx" element={<CXDropzone />} />
         </Routes>
       </div>
     </Router>
