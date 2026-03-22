@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { DropzoneWrapper } from "../../elements/StyledElements";
+import { ACCEPT_EXCEL } from "../../excelAccept";
 import * as XLSX from "xlsx";
 import { CXProcess } from "./CXProcess";
 
@@ -80,7 +81,7 @@ export const CXDropzone = () => {
 
   const { isDragActive, getRootProps, getInputProps } = useDropzone({
     onDrop,
-    accept: ".xlsx, .xls",
+    accept: ACCEPT_EXCEL,
   });
 
   const isReady = excludeSheet && arSheet && promoSheet;

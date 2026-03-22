@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { DropzoneWrapper } from "../../elements/StyledElements";
+import { ACCEPT_EXCEL } from "../../excelAccept";
 import * as XLSX from "xlsx";
 
 export const ReplaceDropzone = props => {
@@ -51,7 +52,7 @@ export const ReplaceDropzone = props => {
     rejectedFiles
   } = useDropzone({
     onDrop,
-    accept: ".xlsx, .xls"
+    accept: ACCEPT_EXCEL,
   });
 
   return (

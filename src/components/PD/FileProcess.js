@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { ReactComponent as ExcelSvg } from "../../images/excel.svg";
-import DatePicker, { registerLocale, setDefaultLocale } from "react-datepicker";
-import zhCN from "date-fns/locale/zh-CN";
+import DatePicker, { registerLocale } from "react-datepicker";
+import { zhCN } from "date-fns/locale/zh-CN";
 import "react-datepicker/dist/react-datepicker.css";
 import "./monthpicker.css";
 import {
@@ -249,7 +249,7 @@ export const FileProcess = ({ filename, data }) => {
           </div>
           <div>
             <ErrorMessage>{errorMessage}</ErrorMessage>
-            <CalcButton onClick={calcFunc} color={"calc"}>
+            <CalcButton onClick={calcFunc}>
               {" "}
               计算{" "}
             </CalcButton>

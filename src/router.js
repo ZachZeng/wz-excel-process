@@ -13,7 +13,6 @@ import {
   RecycleDropzone,
   CXDropzone,
 } from "./components";
-import { Tab } from "./elements/StyledElements";
 
 const NavUnlisted = styled.ul`
   display: flex;
@@ -45,7 +44,13 @@ const NavUnlisted = styled.ul`
 
 export default function NaviRouter() {
   return (
-    <Router basename="/wz-excel-process">
+    <Router
+      basename="/wz-excel-process"
+      future={{
+        v7_startTransition: true,
+        v7_relativeSplatPath: true,
+      }}
+    >
       <div>
         <NavUnlisted>
           <NavLink to="/">
@@ -66,7 +71,7 @@ export default function NaviRouter() {
         </NavUnlisted>
 
         <Routes>
-          <Route exact path="/" element={<PDDropzone />} />
+          <Route path="/" element={<PDDropzone />} />
           <Route path="/dz" element={<DZProcess />} />
           <Route path="/recycle" element={<RecycleDropzone />} />
           <Route path="/cx" element={<CXDropzone />} />
