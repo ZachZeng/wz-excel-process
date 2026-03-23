@@ -7,14 +7,11 @@ import {
 } from "react-router-dom";
 import styled from "styled-components";
 
-import {
-  PDDropzone,
-  DZProcess,
-  RecycleDropzone,
-} from "./components";
+import { PDDropzone, DZProcess, RecycleDropzone } from "./components";
 import { CXDropzone } from "./components/CX/CXDropzone";
 import { DDDropzone } from "./components/DD/DDDropzone";
 import { MODropzone } from "./components/MO/MODropzone";
+import { YFDropzone } from "./components/YF/YFDropzone";
 
 const NavUnlisted = styled.ul`
   display: flex;
@@ -78,6 +75,10 @@ export default function NaviRouter() {
           <NavLink to="/mo">
             <li>月度订单明细表</li>
           </NavLink>
+
+          <NavLink to="/yf">
+            <li>运费核对</li>
+          </NavLink>
         </NavUnlisted>
 
         <Routes>
@@ -87,6 +88,7 @@ export default function NaviRouter() {
           <Route path="/cx" element={<CXDropzone />} />
           <Route path="/dd" element={<DDDropzone />} />
           <Route path="/mo" element={<MODropzone />} />
+          <Route path="/yf" element={<YFDropzone />} />
         </Routes>
       </div>
     </Router>

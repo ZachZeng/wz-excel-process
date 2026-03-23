@@ -9,3 +9,4 @@ export * from "./Recycle/RecycleDropzone";
 export * from "./CX/CXDropzone";
 export * from "./DD/DDDropzone";
 export * from "./MO/MODropzone";
+export * from "./YF/YFDropzone";
