@@ -7,3 +7,5 @@ export * from "./DZ/ReplaceDropzone";
 export * from "./DZ/DZProcess";
 export * from './Recycle/RecycleDropzone';
 export * from './CX/CXDropzone';
+export * from './DD/DDDropzone';
+

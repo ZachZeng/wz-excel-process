@@ -11,8 +11,9 @@ import {
   PDDropzone,
   DZProcess,
   RecycleDropzone,
-  CXDropzone,
 } from "./components";
+import { CXDropzone } from "./components/CX/CXDropzone";
+import { DDDropzone } from "./components/DD/DDDropzone";
 
 const NavUnlisted = styled.ul`
   display: flex;
@@ -68,6 +69,10 @@ export default function NaviRouter() {
           <NavLink to="/cx">
             <li>促销余额核对</li>
           </NavLink>
+
+          <NavLink to="/dd">
+            <li>订单核对</li>
+          </NavLink>
         </NavUnlisted>
 
         <Routes>
@@ -75,6 +80,7 @@ export default function NaviRouter() {
           <Route path="/dz" element={<DZProcess />} />
           <Route path="/recycle" element={<RecycleDropzone />} />
           <Route path="/cx" element={<CXDropzone />} />
+          <Route path="/dd" element={<DDDropzone />} />
         </Routes>
       </div>
     </Router>
