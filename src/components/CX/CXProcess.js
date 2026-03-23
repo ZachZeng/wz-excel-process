@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import * as FileSaver from "file-saver";
 import * as XLSX from "xlsx";
-import { ExportButton } from "../../elements/StyledElements";
+import { ExportButton, ErrorMessage } from "../../elements/StyledElements";
 import { cxReconcile } from "./cxParse";
 
 export const CXProcess = ({ excludeSheet, arSheet, promoSheet }) => {
@@ -41,10 +41,9 @@ export const CXProcess = ({ excludeSheet, arSheet, promoSheet }) => {
   return (
     <div style={{ marginTop: "20px" }}>
       {error ? (
-        <div style={{ color: "red" }}>
-          <h3>处理出错：</h3>
-          <p>{error}</p>
-        </div>
+        <ErrorMessage>
+          {error}
+        </ErrorMessage>
       ) : (
         <div>
           <h3>处理成功！</h3>

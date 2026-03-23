@@ -15,8 +15,14 @@ import { YFDropzone } from "./components/YF/YFDropzone";
 
 const NavUnlisted = styled.ul`
   display: flex;
-  margin: 0;
-  padding: 0;
+  margin: 0 0 2rem 0;
+  padding: 0.5rem;
+  background-color: #f4f7f6;
+  border-radius: 12px;
+  gap: 0.5rem;
+  width: fit-content;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+  flex-wrap: wrap;
 
   a {
     text-decoration: none;
@@ -24,19 +30,27 @@ const NavUnlisted = styled.ul`
 
   li {
     color: #61988e;
-    border: 2px solid #61988e;
-    border-radius: 2px;
-    padding: 0.5rem 1rem;
-    margin: 0 -1px;
+    padding: 0.75rem 1.5rem;
     font-size: 1rem;
-    position: relative;
+    font-weight: 500;
+    border-radius: 8px;
     list-style: none;
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+    margin: 0;
+    border: none;
+  }
+
+  a:not(.active) li:hover {
+    color: #4a7a71;
+    background-color: #e6efed;
   }
 
   .active {
     li {
       background-color: #61988e;
-      color: #fff;
+      color: #ffffff;
+      box-shadow: 0 2px 4px rgba(97, 152, 142, 0.3);
     }
   }
 `;

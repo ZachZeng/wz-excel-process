@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import { DropzoneWrapper } from "../../elements/StyledElements";
+import { DropzoneWrapper, ErrorMessage } from "../../elements/StyledElements";
 import * as XLSX from "xlsx";
 import { MOProcess } from "./MOProcess";
 
@@ -57,14 +57,14 @@ export const MODropzone = () => {
   return (
     <>
       <h1>月度订单明细表</h1>
-      <DropzoneWrapper {...getRootProps()}>
+      <DropzoneWrapper {...getRootProps()} isDragActive={isDragActive}>
         <input {...getInputProps()} />
         {!isDragActive &&
           "点击这里或者拖拽文件至这里进行上传（需包含销售明细、运费、促销等8张表）"}
         {isDragActive && "放下文件"}
       </DropzoneWrapper>
 
-      {error && <p style={{ color: "red", marginTop: "20px" }}>{error}</p>}
+      {error && <ErrorMessage>{error}</ErrorMessage>}
 
       {workbook && <MOProcess workbook={workbook} />}
     </>

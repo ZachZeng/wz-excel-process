@@ -59,7 +59,7 @@ export const RecycleDropzone = () => {
   return (
     <>
       <h1>未回收对账单</h1>
-      <DropzoneWrapper {...getRootProps()}>
+      <DropzoneWrapper {...getRootProps()} isDragActive={isDragActive}>
         <input {...getInputProps()} />
         {!isDragActive && "点击这里或者拖拽文件至这里进行上传"}
         {isDragActive && "放下文件"}

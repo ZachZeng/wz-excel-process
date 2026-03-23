@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import { DropzoneWrapper } from "../../elements/StyledElements";
+import { DropzoneWrapper, ErrorMessage } from "../../elements/StyledElements";
 import * as XLSX from "xlsx";
 import { DDProcess } from "./DDProcess";
 
@@ -77,14 +77,14 @@ export const DDDropzone = () => {
   return (
     <>
       <h1>订单核对</h1>
-      <DropzoneWrapper {...getRootProps()}>
+      <DropzoneWrapper {...getRootProps()} isDragActive={isDragActive}>
         <input {...getInputProps()} />
         {!isDragActive &&
           "点击这里或者拖拽文件至这里进行上传（支持订单明细表）"}
         {isDragActive && "放下文件"}
       </DropzoneWrapper>
 
-      {error && <p style={{ color: "red", marginTop: "20px" }}>{error}</p>}
+      {error && <ErrorMessage>{error}</ErrorMessage>}
 
       {sheet && <DDProcess sheet={sheet} />}
     </>

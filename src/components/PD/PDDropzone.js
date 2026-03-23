@@ -58,7 +58,7 @@ export const PDDropzone = () => {
   return (
     <>
       <h1>铺底统计</h1>
-      <DropzoneWrapper {...getRootProps()}>
+      <DropzoneWrapper {...getRootProps()} isDragActive={isDragActive}>
         <input {...getInputProps()} />
         {!isDragActive && "点击这里或者拖拽文件至这里进行上传"}
         {isDragActive && "放下文件"}

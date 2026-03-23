@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import { DropzoneWrapper } from "../../elements/StyledElements";
+import { DropzoneWrapper, RecognizedList, ErrorMessage } from "../../elements/StyledElements";
 import { ACCEPT_EXCEL } from "../../excelAccept";
 import * as XLSX from "xlsx";
 import { CXProcess } from "./CXProcess";
@@ -89,7 +89,7 @@ export const CXDropzone = () => {
   return (
     <>
       <h1>促销余额核对</h1>
-      <DropzoneWrapper {...getRootProps()}>
+      <DropzoneWrapper {...getRootProps()} isDragActive={isDragActive}>
         <input {...getInputProps()} />
         {!isDragActive &&
           "点击这里或者拖拽文件至这里进行上传（支持单文件多表或多文件）"}
@@ -98,12 +98,33 @@ export const CXDropzone = () => {
 
       <div style={{ marginTop: "20px" }}>
         <h3>已识别的表格：</h3>
-        <ul>
-          <li>无需统计客户名单: {excludeSheet ? "✅ 已加载" : "❌ 未找到"}</li>
-          <li>应收账款月报: {arSheet ? "✅ 已加载" : "❌ 未找到"}</li>
-          <li>促销活动余额: {promoSheet ? "✅ 已加载" : "❌ 未找到"}</li>
-        </ul>
-        {error && <p style={{ color: "red" }}>{error}</p>}
+        <RecognizedList>
+          <li>
+            <span>无需统计客户名单</span>
+            {excludeSheet ? (
+              <span className="status-success">✅ 已加载</span>
+            ) : (
+              <span className="status-error">❌ 未找到</span>
+            )}
+          </li>
+          <li>
+            <span>应收账款月报</span>
+            {arSheet ? (
+              <span className="status-success">✅ 已加载</span>
+            ) : (
+              <span className="status-error">❌ 未找到</span>
+            )}
+          </li>
+          <li>
+            <span>促销活动余额</span>
+            {promoSheet ? (
+              <span className="status-success">✅ 已加载</span>
+            ) : (
+              <span className="status-error">❌ 未找到</span>
+            )}
+          </li>
+        </RecognizedList>
+        {error && <ErrorMessage>{error}</ErrorMessage>}
       </div>
 
       {isReady && (

@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import { DropzoneWrapper } from "../../elements/StyledElements";
+import { DropzoneWrapper, RecognizedList, ErrorMessage } from "../../elements/StyledElements";
 import * as XLSX from "xlsx";
 import { YFProcess } from "./YFProcess";
 
@@ -68,7 +68,7 @@ export const YFDropzone = () => {
   return (
     <>
       <h1>运费核对</h1>
-      <DropzoneWrapper {...getRootProps()}>
+      <DropzoneWrapper {...getRootProps()} isDragActive={isDragActive}>
         <input {...getInputProps()} />
         {!isDragActive &&
           "点击这里或者拖拽文件至这里进行上传（支持单文件多表或多文件）"}
@@ -77,11 +77,25 @@ export const YFDropzone = () => {
 
       <div style={{ marginTop: "20px" }}>
         <h3>已识别的表格：</h3>
-        <ul>
-          <li>规则表: {ruleSheet ? "✅ 已加载" : "❌ 未找到"}</li>
-          <li>运费表: {freightSheet ? "✅ 已加载" : "❌ 未找到"}</li>
-        </ul>
-        {error && <p style={{ color: "red" }}>{error}</p>}
+        <RecognizedList>
+          <li>
+            <span>规则表</span>
+            {ruleSheet ? (
+              <span className="status-success">✅ 已加载</span>
+            ) : (
+              <span className="status-error">❌ 未找到</span>
+            )}
+          </li>
+          <li>
+            <span>运费表</span>
+            {freightSheet ? (
+              <span className="status-success">✅ 已加载</span>
+            ) : (
+              <span className="status-error">❌ 未找到</span>
+            )}
+          </li>
+        </RecognizedList>
+        {error && <ErrorMessage>{error}</ErrorMessage>}
       </div>
 
       {isReady && (

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import * as FileSaver from "file-saver";
 import * as XLSX from "xlsx";
-import { ExportButton } from "../../elements/StyledElements";
+import { ExportButton, ErrorMessage } from "../../elements/StyledElements";
 import { moParse } from "./moParse";
 
 export const MOProcess = ({ workbook }) => {
@@ -39,10 +39,9 @@ export const MOProcess = ({ workbook }) => {
 
   if (error) {
     return (
-      <div style={{ marginTop: "20px", color: "red" }}>
-        <h3>处理出错：</h3>
-        <p>{error}</p>
-      </div>
+      <ErrorMessage style={{ marginTop: "20px" }}>
+        {error}
+      </ErrorMessage>
     );
   }
 
