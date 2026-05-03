@@ -12,6 +12,7 @@ import { CXDropzone } from "./components/CX/CXDropzone";
 import { DDDropzone } from "./components/DD/DDDropzone";
 import { MODropzone } from "./components/MO/MODropzone";
 import { YFDropzone } from "./components/YF/YFDropzone";
+import { SMDDropzone } from "./components/SMD/SMDDropzone";
 
 const NavUnlisted = styled.ul`
   display: flex;
@@ -93,6 +94,10 @@ export default function NaviRouter() {
           <NavLink to="/yf">
             <li>运费核对</li>
           </NavLink>
+
+          <NavLink to="/smd">
+            <li>苏明达对账</li>
+          </NavLink>
         </NavUnlisted>
 
         <Routes>
@@ -103,6 +108,7 @@ export default function NaviRouter() {
           <Route path="/dd" element={<DDDropzone />} />
           <Route path="/mo" element={<MODropzone />} />
           <Route path="/yf" element={<YFDropzone />} />
+          <Route path="/smd" element={<SMDDropzone />} />
         </Routes>
       </div>
     </Router>

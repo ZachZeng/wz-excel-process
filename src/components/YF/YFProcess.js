@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import * as FileSaver from "file-saver";
 import * as XLSX from "xlsx";
-import { ExportButton, ErrorMessage } from "../../elements/StyledElements";
+import { ExportButton, ErrorMessage, ResultsTable } from "../../elements/StyledElements";
 import { yfParse } from "./yfParse";
 
 export const YFProcess = ({ ruleSheet, freightSheet }) => {
@@ -55,6 +55,28 @@ export const YFProcess = ({ ruleSheet, freightSheet }) => {
       <p>
         发现 <strong>{results.length}</strong> 个不符合免运费规则的客户。
       </p>
+      
+      {results.length > 0 && (
+        <div style={{ marginTop: "20px", marginBottom: "20px", maxHeight: "400px", overflowY: "auto" }}>
+          <ResultsTable>
+            <thead>
+              <tr>
+                <th>序号</th>
+                <th>客户名称</th>
+              </tr>
+            </thead>
+            <tbody>
+              {results.map((item, index) => (
+                <tr key={index}>
+                  <td>{index + 1}</td>
+                  <td>{item["客户名称"]}</td>
+                </tr>
+              ))}
+            </tbody>
+          </ResultsTable>
+        </div>
+      )}
+
       <ExportButton onClick={exportToExcel}>导出结果</ExportButton>
     </div>
   );

@@ -10,3 +10,4 @@ export * from "./CX/CXDropzone";
 export * from "./DD/DDDropzone";
 export * from "./MO/MODropzone";
 export * from "./YF/YFDropzone";
+export * from "./SMD/SMDDropzone";

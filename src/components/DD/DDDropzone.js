@@ -1,16 +1,18 @@
 import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import { DropzoneWrapper, ErrorMessage } from "../../elements/StyledElements";
+import { DropzoneWrapper, RecognizedList, ErrorMessage } from "../../elements/StyledElements";
 import * as XLSX from "xlsx";
 import { DDProcess } from "./DDProcess";
 
 export const DDDropzone = () => {
   const [sheet, setSheet] = useState(null);
   const [error, setError] = useState("");
+  const [hasAttempted, setHasAttempted] = useState(false);
 
   const onDrop = useCallback((acceptedFiles) => {
     setError("");
     setSheet(null);
+    setHasAttempted(true);
 
     const file = acceptedFiles[0];
     if (!file) return;
@@ -83,6 +85,22 @@ export const DDDropzone = () => {
           "点击这里或者拖拽文件至这里进行上传（支持订单明细表）"}
         {isDragActive && "放下文件"}
       </DropzoneWrapper>
+
+      {hasAttempted && (
+        <div style={{ marginTop: "20px" }}>
+          <h3>已识别的表格：</h3>
+          <RecognizedList>
+            <li>
+              <span>订单明细表</span>
+              {sheet ? (
+                <span className="status-success">✅ 已加载</span>
+              ) : (
+                <span className="status-error">❌ 未找到</span>
+              )}
+            </li>
+          </RecognizedList>
+        </div>
+      )}
 
       {error && <ErrorMessage>{error}</ErrorMessage>}
 
