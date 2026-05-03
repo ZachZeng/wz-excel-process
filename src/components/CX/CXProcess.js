@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import * as FileSaver from "file-saver";
 import * as XLSX from "xlsx";
-import { ExportButton, ErrorMessage } from "../../elements/StyledElements";
+import { ExportButton, ErrorMessage, ResultsTable } from "../../elements/StyledElements";
 import { cxReconcile } from "./cxParse";
 
 export const CXProcess = ({ excludeSheet, arSheet, promoSheet }) => {
@@ -48,6 +48,28 @@ export const CXProcess = ({ excludeSheet, arSheet, promoSheet }) => {
         <div>
           <h3>处理成功！</h3>
           <p>共筛选出 {resultNames.length} 个客户（差额不为 0）。</p>
+
+          {resultNames.length > 0 && (
+            <div style={{ marginTop: "20px", marginBottom: "20px", maxHeight: "400px", overflowY: "auto" }}>
+              <ResultsTable>
+                <thead>
+                  <tr>
+                    <th>序号</th>
+                    <th>客户名称</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {resultNames.map((name, index) => (
+                    <tr key={index}>
+                      <td>{index + 1}</td>
+                      <td>{name}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </ResultsTable>
+            </div>
+          )}
+
           <ExportButton onClick={exportToExcel}>导出结果</ExportButton>
         </div>
       )}
