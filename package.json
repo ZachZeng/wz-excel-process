@@ -24,6 +24,7 @@
     "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "cross-env CI=false react-scripts build",
+    "postbuild": "node -e \"require('fs').copyFileSync('build/index.html', 'build/404.html')\"",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
