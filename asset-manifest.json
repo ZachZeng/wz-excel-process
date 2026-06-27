@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/wz-excel-process/static/css/main.ff6952d1.css",
-    "main.js": "/wz-excel-process/static/js/main.3dd7827e.js",
+    "main.js": "/wz-excel-process/static/js/main.11067f45.js",
     "static/media/excel.svg": "/wz-excel-process/static/media/excel.6d466b5a928b4d413710b4c77ad65a27.svg",
     "index.html": "/wz-excel-process/index.html",
     "main.ff6952d1.css.map": "/wz-excel-process/static/css/main.ff6952d1.css.map",
-    "main.3dd7827e.js.map": "/wz-excel-process/static/js/main.3dd7827e.js.map"
+    "main.11067f45.js.map": "/wz-excel-process/static/js/main.11067f45.js.map"
   },
   "entrypoints": [
     "static/css/main.ff6952d1.css",
-    "static/js/main.3dd7827e.js"
+    "static/js/main.11067f45.js"
   ]
 }
