@@ -19,6 +19,10 @@ function r4(n) {
   return Math.round(n * 10000) / 10000;
 }
 
+function r2(n) {
+  return Math.round((n || 0) * 100) / 100;
+}
+
 // ─── parse 基础数据.xlsx ───────────────────────────────────────────────────────
 function parse基础数据(wb) {
   const aoa = (sheetName) =>
@@ -298,9 +302,9 @@ function calc允真(yzOEMRevenue, yzOEMCost, feeValues, manualInputs, 总表B) {
   const feeTotalD = feeRows.reduce((s, r) => s + r.D, 0);
 
   // P&L (rows 4-12)
-  const B44_总表 = 总表B[39]; // 总表 B44 (税金)
-  const B46_总表 = 总表B[41]; // 总表 B46 (营业外收入)
-  const B47_总表 = 总表B[42]; // 总表 B47 (营业外支出)
+  const B44_总表 = 总表B[40]; // 总表 B44 (税金) — index 40 = Excel row 44
+  const B46_总表 = 总表B[42]; // 总表 B46 (营业外收入) — index 42 = Excel row 46
+  const B47_总表 = 总表B[43]; // 总表 B47 (营业外支出) — index 43 = Excel row 47
 
   const YZ4 = yzOEMRevenue;
   const YZ5 = yzOEMCost;
@@ -381,7 +385,7 @@ function build总表AOA(B, C, D, E, 铺底Pivot, feeValues, manualInputs, D2, re
 
   // P&L rows 4-48 (45 rows, index 0-44)
   for (let i = 0; i < 45; i++) {
-    rows.push([总表Labels[i], B[i], C[i], D[i], E[i], null, null]);
+    rows.push([总表Labels[i], r2(B[i]), r2(C[i]), r2(D[i]), r2(E[i]), null, null]);
   }
 
   // Notes section
@@ -399,9 +403,9 @@ function build总表AOA(B, C, D, E, 铺底Pivot, feeValues, manualInputs, D2, re
   const 铺底DataRows = customers.map((cust) => {
     const amounts = 铺底Brands.map((b) => {
       const v = (铺底Pivot[cust] || {})[b];
-      return v !== undefined ? v : null;
+      return v !== undefined ? r2(v) : null;
     });
-    const total = amounts.reduce((s, v) => s + (v || 0), 0);
+    const total = r2(amounts.reduce((s, v) => s + (v || 0), 0));
     return [cust, ...amounts, total];
   });
   while (铺底DataRows.length < 13) {
@@ -411,9 +415,9 @@ function build总表AOA(B, C, D, E, 铺底Pivot, feeValues, manualInputs, D2, re
 
   // 铺底 总计
   const 铺底总计 = 铺底Brands.map((b) =>
-    customers.reduce((s, c) => s + ((铺底Pivot[c] || {})[b] || 0), 0)
+    r2(customers.reduce((s, c) => s + ((铺底Pivot[c] || {})[b] || 0), 0))
   );
-  const 铺底Grand = 铺底总计.reduce((s, v) => s + v, 0);
+  const 铺底Grand = r2(铺底总计.reduce((s, v) => s + v, 0));
   rows.push(["合计", ...铺底总计, 铺底Grand]);
 
   // 营业外 section
@@ -423,14 +427,14 @@ function build总表AOA(B, C, D, E, 铺底Pivot, feeValues, manualInputs, D2, re
   const 营外 = manualInputs.营业外 || [];
   for (let i = 0; i < 4; i++) {
     const item = 营外[i] || {};
-    const 收入 = item.收入 || null;
-    const 支出 = item.支出 || null;
-    const 利润 = (item.收入 || 0) - (item.支出 || 0);
+    const 收入 = item.收入 ? r2(item.收入) : null;
+    const 支出 = item.支出 ? r2(item.支出) : null;
+    const 利润 = r2((item.收入 || 0) - (item.支出 || 0)) || null;
     rows.push([item.项目 || null, 收入, 支出, 利润, null, null, null]);
   }
-  const 营外总收入 = 营外.reduce((s, i) => s + (i.收入 || 0), 0);
-  const 营外总支出 = 营外.reduce((s, i) => s + (i.支出 || 0), 0);
-  rows.push(["合计", 营外总收入 || null, 营外总支出 || null, 营外总收入 - 营外总支出 || null, null, null, null]);
+  const 营外总收入 = r2(营外.reduce((s, i) => s + (i.收入 || 0), 0));
+  const 营外总支出 = r2(营外.reduce((s, i) => s + (i.支出 || 0), 0));
+  rows.push(["合计", 营外总收入 || null, 营外总支出 || null, r2(营外总收入 - 营外总支出) || null, null, null, null]);
   rows.push([null]);
 
   return rows;
@@ -450,7 +454,7 @@ function build费用明细AOA(feeValues, 上月B3, 上年B3, 上月B8) {
 
   const 同比上月 = thisMonth.map((v, i) => pct(v, 上月B3[i]));
   const 同比上年 = thisMonth.map((v, i) => pct(v, 上年B3[i]));
-  const 累计 = thisMonth.map((v, i) => v + (上月B8[i] || 0));
+  const 累计 = thisMonth.map((v, i) => r2(v + (上月B8[i] || 0)));
 
   const headers = [
     null, "促销费", "差旅费", "房租水电", "通讯费", "工资奖金", "商品运保费",
@@ -461,9 +465,9 @@ function build费用明细AOA(feeValues, 上月B3, 上年B3, 上月B8) {
   const rows = [];
   rows.push(["费用明细", ...Array(17).fill(null)]);
   rows.push(headers);
-  rows.push(["本月数", ...thisMonth, null]);
-  rows.push(["上月数", ...上月B3, null]);
-  rows.push(["上年同期数", ...上年B3, null]);
+  rows.push(["本月数", ...thisMonth.map(r2), null]);
+  rows.push(["上月数", ...上月B3.map(r2), null]);
+  rows.push(["上年同期数", ...上年B3.map(r2), null]);
   rows.push(["同比上月增减(%)", ...同比上月, null]);
   rows.push(["同比上年增减(%)", ...同比上年, null]);
   rows.push(["本年累计数", ...累计, null]);
@@ -495,7 +499,7 @@ function build允真AOA(yzData, C, D, E, 铺底Pivot, feeValues, D2, reportDateS
   rows.push(["编制单位: 四川新视域商贸公司", D2, "   单位：元", null, null]);
   rows.push(["项　　目", "本月数", "上月数", "上年同期数", "本年累计数"]);
   for (let i = 0; i < 9; i++) {
-    rows.push([允真PLLabels[i], B[i], C[i], D[i], E[i]]);
+    rows.push([允真PLLabels[i], r2(B[i]), r2(C[i]), r2(D[i]), r2(E[i])]);
   }
 
   // Notes
@@ -530,9 +534,9 @@ function build允真AOA(yzData, C, D, E, 铺底Pivot, feeValues, D2, reportDateS
   rows.push(["项目", "允真/OEM", "分摊部分", "合计", null]);
 
   feeRows.forEach((r) => {
-    rows.push([r.name, r.B || null, r.C || null, r.D || null, null]);
+    rows.push([r.name, r2(r.B) || null, r2(r.C) || null, r2(r.D) || null, null]);
   });
-  rows.push(["合计", feeTotalB || null, feeTotalC || null, feeTotalD || null, null]);
+  rows.push(["合计", r2(feeTotalB) || null, r2(feeTotalC) || null, r2(feeTotalD) || null, null]);
 
   rows.push([null]);
   rows.push(["备注：1.不含昆明亮度、贵阳百澳、亮睛维视、零售、周小麦、重庆区域等谢伟及谢毅客户。", null, null, null, null]);
